@@ -12,7 +12,7 @@ class DonationDonation(models.Model):
     mandate_id = fields.Many2one(
         "account.banking.mandate",
         string="Mandate",
-        states={"done": [("readonly", True)]},
+        readonly="[state == 'done']",
         tracking=True,
         check_company=True,
         ondelete="restrict",

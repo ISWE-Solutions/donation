@@ -20,7 +20,7 @@
                     type="object"
                     string="Donation"
                     class="btn btn-secondary"
-                    attrs="{'invisible': [('is_reconciled', '=', True)]}"
+                    invisible="is_reconciled"
                 />
         </button>
     </field>
@@ -37,7 +37,7 @@
             <field
                     name="donation_ids"
                     widget="many2many_tags"
-                    attrs="{'invisible': [('donation_ids', '=', [])]}"
+                    invisible="not donation_ids"
                 />
         </field>
     </field>

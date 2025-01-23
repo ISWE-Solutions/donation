@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Copyright 2014-2021 Barroux Abbey (http://www.barroux.org)
   Copyright 2014-2021 Akretion France (http://www.akretion.com/)
@@ -17,23 +17,22 @@
                         name="validate"
                         string="Validate"
                         class="oe_highlight"
-                        states="draft"
                         groups="donation.group_donation_user"
-                        invisible="context.get('recurring_view')"
+                        invisible="state != 'draft' or context.get('recurring_view')"
                     />
                     <button
                         name="print_thanks"
                         string="Print Thanks Letter"
                         type="object"
                         groups="donation.group_donation_user"
-                        attrs="{'invisible': ['|', ('thanks_printed', '=', True), ('state', '!=', 'done')]}"
+                        invisible="state != 'done' or thanks_printed"
                         class="oe_highlight"
                     />
                     <button
                         type="object"
                         name="cancel2draft"
                         string="Back to Draft"
-                        states="cancel"
+                        invisible="state != 'cancel'"
                         groups="donation.group_donation_user"
                     />
                     <button
@@ -41,8 +40,7 @@
                         name="done2cancel"
                         string="Cancel"
                         groups="donation.group_donation_user"
-                        states="done"
-                        invisible="context.get('recurring_view')"
+                        invisible="state != 'done' or context.get('recurring_view')"
                     />
                     <button
                         type="object"
@@ -59,60 +57,49 @@
                     />
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box" />
+                    <div class="oe_button_box" name="button_box"/>
                     <div class="oe_title">
                         <h1>
-                            <field name="number" readonly="1" />
+                            <field name="number" readonly="1"/>
                         </h1>
                     </div>
                     <group name="main">
                         <group name="manual">
-                            <field name="partner_id" />
-                            <field name="commercial_partner_id" invisible="1" />
-                            <field name="payment_mode_id" widget="selection" />
-                            <field
-                                name="currency_id"
-                                groups="base.group_multi_currency"
-                            />
-                            <field name="currency_id" invisible="1" />
-                            <field name="company_currency_id" invisible="1" />
-                            <field
-                                name="check_total"
-                                groups="donation.group_donation_check_total"
-                            />
-                            <field name="payment_ref" />
-                            <field
-                                name="donation_date"
-                                options="{'datepicker': {'warn_future': true}}"
-                            />
-                            <field name="campaign_id" />
-                            <field name="thanks_template_id" widget="selection" />
+                            <field name="partner_id"/>
+                            <field name="commercial_partner_id" invisible="1"/>
+                            <field name="payment_mode_id" widget="selection" readonly="state == 'done'"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_currency_id" invisible="1"/>
+                            <field name="check_total" groups="donation.group_donation_check_total" readonly="state == 'done'"/>
+                            <field name="payment_ref" readonly="state == 'done'"/>
+                            <field name="donation_date" options="{'datepicker': {'warn_future': true}}" readonly="state == 'done'"/>
+                            <field name="campaign_id" readonly="state == 'done'"/>
+                            <field name="thanks_template_id" widget="selection"/>
                         </group>
                         <group name="auto">
-                            <field name="company_id" invisible="1" />
-                            <field
-                                name="company_id"
-                                groups="base.group_multi_company"
-                            />
-                            <label for="tax_receipt_option" />
+                            <field name="company_id" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state == 'done'"/>
+                            <label for="tax_receipt_option"/>
                             <div name="tax_receipt_option">
-                                <field name="tax_receipt_option" class="oe_inline" />
+                                <field name="tax_receipt_option" class="oe_inline" readonly="state == 'done'"/>
                                 <button
                                     name="%(donation_tax_receipt_option_switch_action)d"
                                     string="Change"
                                     type="action"
                                     class="oe_link"
-                                    attrs="{'invisible': ['|', ('state', '!=', 'done'), ('tax_receipt_id', '!=', False)]}"
+                                    invisible="state != 'done' or not tax_receipt_id"
+                                    readonly="state == 'done'"
                                 />
                             </div>
-                            <field name="tax_receipt_total" />
-                            <field name="tax_receipt_id" />
-                            <field name="thanks_printed" />
+                            <field name="tax_receipt_total"/>
+                            <field name="tax_receipt_id"/>
+                            <field name="thanks_printed"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Donation Lines" name="lines">
-                            <field name="line_ids" nolabel="1" />
+                            <field name="line_ids" nolabel="1"/>
                             <group name="subtotal" class="oe_subtotal_footer oe_right">
                                 <field
                                     name="amount_total"
@@ -123,24 +110,21 @@
                         </page>
                         <page string="Other Information" name="other">
                             <group name="other">
-                            <group name="other-left">
-                                <field name="move_id" />
-                                <field name="bank_statement_line_id" />
-                                <field
-                                        name="amount_total_company_currency"
-                                        groups="base.group_multi_currency"
-                                    />
-                            </group>
-                            <group name="other-right">
-                            </group>
+                                <group name="other-left">
+                                    <field name="move_id"/>
+                                    <field name="bank_statement_line_id"/>
+                                    <field name="amount_total_company_currency" groups="base.group_multi_currency"/>
+                                </group>
+                                <group name="other-right">
+                                </group>
                             </group>
                         </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" />
-                    <field name="activity_ids" widget="mail_activity" />
-                    <field name="message_ids" widget="mail_thread" />
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
         </field>
@@ -153,50 +137,31 @@
             <form>
                 <group name="main">
                     <group name="manual">
-                        <field name="partner_id" readonly="1" />
-                        <field name="commercial_partner_id" invisible="1" />
-                        <field name="payment_mode_id" readonly="1" />
-                        <field
-                            name="currency_id"
-                            groups="base.group_multi_currency"
-                            readonly="1"
-                        />
-                            <field name="company_currency_id" invisible="1" />
-                        <field
-                            name="check_total"
-                            groups="donation.group_donation_check_total"
-                            readonly="1"
-                        />
-                        <field name="payment_ref" />
-                        <field
-                            name="donation_date"
-                            options="{'datepicker': {'warn_future': true}}"
-                        />
-                        <field name="campaign_id" />
-                        <field name="thanks_template_id" widget="selection" />
+                        <field name="partner_id" readonly="1"/>
+                        <field name="commercial_partner_id" invisible="1"/>
+                        <field name="payment_mode_id" readonly="1"/>
+                        <field name="currency_id" groups="base.group_multi_currency" readonly="1"/>
+                        <field name="company_currency_id" invisible="1"/>
+                        <field name="check_total" groups="donation.group_donation_check_total" readonly="1"/>
+                        <field name="payment_ref"/>
+                        <field name="donation_date" options="{'datepicker': {'warn_future': true}}"/>
+                        <field name="campaign_id"/>
+                        <field name="thanks_template_id" widget="selection"/>
                     </group>
                     <group name="auto">
-                        <field name="company_id" invisible="1" />
-                        <field name="state" invisible="1" />
-                        <field
-                            name="company_id"
-                            groups="base.group_multi_company"
-                            readonly="1"
-                        />
-                        <field name="tax_receipt_option" />
-                        <field name="tax_receipt_total" />
-                        <field name="bank_statement_line_id" />
+                        <field name="company_id" invisible="1"/>
+                        <field name="state" invisible="1"/>
+                        <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                        <field name="tax_receipt_option"/>
+                        <field name="tax_receipt_total"/>
+                        <field name="bank_statement_line_id"/>
                     </group>
+                </group>
+                <group name="lines" string="Lines" colspan="2">
+                    <field name="line_ids" nolabel="1" readonly="state == 'done'"/>
+                    <group name="subtotal" class="oe_subtotal_footer oe_right">
+                        <field name="amount_total" string="Total" class="oe_subtotal_footer_separator"/>
                     </group>
-                    <group name="lines" string="Lines" colspan="2">
-                        <field name="line_ids" nolabel="1" />
-                        <group name="subtotal" class="oe_subtotal_footer oe_right">
-                            <field
-                            name="amount_total"
-                            string="Total"
-                            class="oe_subtotal_footer_separator"
-                        />
-                        </group>
                 </group>
                 <footer>
                     <button
@@ -204,14 +169,14 @@
                         name="validate"
                         string="Validate"
                         class="btn-primary"
-                        states="draft"
+                        invisible="state != 'draft'"
                         groups="donation.group_donation_user"
                     />
                     <button
                         type="object"
                         name="save_as_draft"
                         string="Save as Draft"
-                        states="draft"
+                        invisible="state != 'draft'"
                         groups="donation.group_donation_user"
                     />
                 </footer>
@@ -219,22 +184,20 @@
         </field>
     </record>
 
-
-
-    <record id="donation_tree" model="ir.ui.view">
-        <field name="name">donation.tree</field>
+    <record id="donation_list" model="ir.ui.view">
+        <field name="name">donation.list</field>
         <field name="model">donation.donation</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <header>
-                        <button
+                    <button
                         name="%(donation_validate_action)d"
                         type="action"
                         string="Validate"
                         groups="donation.group_donation_user"
                         invisible="context.get('recurring_view')"
                     />
-                        <button
+                    <button
                         name="thanks_printed_button"
                         type="object"
                         string="Mark as Thanks Printed"
@@ -242,37 +205,23 @@
                         invisible="context.get('recurring_view')"
                         confirm="Mark all selected donation as Thanks Printed?"
                     />
-                        <!-- Unfortunately, confirm="" doesn't work for
-                            buttons in tree view... at least not in v14 -->
-                    </header>
-                <field
-                    name="number"
-                    invisible="context.get('recurring_view')"
-                    decoration-bf="1"
-                />
-                <field name="partner_id" invisible="context.get('partner_view')" />
-                <field name="donation_date" />
-                <field name="amount_total_company_currency" sum="1" />
-                <field name="amount_total" optional="hide" />
-                <field name="currency_id" invisible="1" />
-                <field name="company_currency_id" invisible="1" />
-                <field name="payment_mode_id" />
-                <field
-                    name="tax_receipt_option"
-                    optional="hide"
-                    widget="badge"
-                    decoration-success="tax_receipt_option == 'each'"
-                    decoration-info="tax_receipt_option == 'annual'"
-                />
-                <field name="campaign_id" optional="show" />
-                <field name="thanks_template_id" optional="hide" />
-                <field name="thanks_printed" optional="hide" />
-                <field name="payment_ref" optional="hide" />
-                <field
-                    name="company_id"
-                    groups="base.group_multi_company"
-                    optional="show"
-                />
+                    <!-- Unfortunately, confirm="" doesn't work for
+                        buttons in list view... at least not in v14 -->
+                </header>
+                <field name="number" invisible="context.get('recurring_view')" decoration-bf="1"/>
+                <field name="partner_id" invisible="context.get('partner_view')"/>
+                <field name="donation_date"/>
+                <field name="amount_total_company_currency" sum="1"/>
+                <field name="amount_total" optional="hide"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="company_currency_id" invisible="1"/>
+                <field name="payment_mode_id"/>
+                <field name="tax_receipt_option" optional="hide" widget="badge" decoration-success="tax_receipt_option == 'each'" decoration-info="tax_receipt_option == 'annual'"/>
+                <field name="campaign_id" optional="show"/>
+                <field name="thanks_template_id" optional="hide"/>
+                <field name="thanks_printed" optional="hide"/>
+                <field name="payment_ref" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
                 <field
                     name="state"
                     invisible="context.get('recurring_view')"
@@ -281,7 +230,7 @@
                     decoration-muted="state == 'cancel'"
                     decoration-success="state == 'done'"
                 />
-            </tree>
+            </list>
         </field>
     </record>
     <record id="donation_search" model="ir.ui.view">
@@ -289,24 +238,24 @@
         <field name="model">donation.donation</field>
         <field name="arch" type="xml">
             <search>
-                <field name="number" />
-                <field name="partner_id" />
-                <separator />
-                <filter string="Date" name="donation_date" date="donation_date" />
-                <separator />
+                <field name="number"/>
+                <field name="partner_id"/>
+                <separator/>
+                <filter string="Date" name="donation_date" date="donation_date"/>
+                <separator/>
                 <filter
                     name="draft"
                     string="Draft"
                     domain="[('state', '=', 'draft')]"
                 />
-                <filter name="done" string="Done" domain="[('state', '=', 'done')]" />
+                <filter name="done" string="Done" domain="[('state', '=', 'done')]"/>
                 <filter
                     name="cancel"
                     string="Cancelled"
                     domain="[('state', '=', 'cancel')]"
                 />
-                <separator />
-            <filter
+                <separator/>
+                <filter
                     name="thanks_to_print"
                     string="Thanks to Print"
                     domain="[('thanks_printed', '=', False)]"
@@ -366,8 +315,8 @@
         <field name="model">donation.donation</field>
         <field name="arch" type="xml">
             <graph>
-                <field name="donation_date" type="row" />
-                <field name="amount_total_company_currency" type="measure" />
+                <field name="donation_date" type="row"/>
+                <field name="amount_total_company_currency" type="measure"/>
             </graph>
         </field>
     </record>
@@ -376,37 +325,37 @@
         <field name="model">donation.donation</field>
         <field name="arch" type="xml">
             <pivot>
-                <field name="donation_date" type="row" />
-                <field name="amount_total_company_currency" type="measure" />
+                <field name="donation_date" type="row"/>
+                <field name="amount_total_company_currency" type="measure"/>
             </pivot>
         </field>
     </record>
-    <record id="donation_line_tree" model="ir.ui.view">
-        <field name="name">donation.line.tree</field>
+    <record id="donation_line_list" model="ir.ui.view">
+        <field name="name">donation.line.list</field>
         <field name="model">donation.line</field>
         <field name="arch" type="xml">
-            <tree editable="bottom">
-                <field name="sequence" widget="handle" />
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
                 <field
                     name="donation_id"
                     invisible="not context.get('donation_line_main_view')"
                 />
-                <field name="product_id" context="{'default_donation': True}" />
-                <field name="product_detailed_type" optional="hide" />
-                <field name="quantity" />
-                <field name="unit_price" />
+                <field name="product_id" context="{'default_donation': True}"/>
+                <field name="product_type" optional="hide"/>
+                <field name="quantity"/>
+                <field name="unit_price"/>
                 <field
                     name="analytic_distribution"
                     widget="analytic_distribution"
                     groups="analytic.group_analytic_accounting"
                     options="{'product_field': 'product_id', 'business_domain': 'donation'}"
                 />
-                <field name="amount" />
-                <field name="tax_receipt_ok" string="Tax Receipt" optional="show" />
-                <field name="in_kind" optional="hide" />
-                <field name="currency_id" invisible="1" />
-                <field name="company_id" invisible="1" />
-            </tree>
+                <field name="amount"/>
+                <field name="tax_receipt_ok" string="Tax Receipt" optional="show"/>
+                <field name="in_kind" optional="hide"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+            </list>
         </field>
     </record>
     <record id="donation_line_form" model="ir.ui.view">
@@ -419,23 +368,23 @@
                         name="donation_id"
                         invisible="not context.get('donation_line_main_view')"
                     />
-                    <field name="product_id" />
-                    <field name="quantity" />
-                    <field name="unit_price" />
+                    <field name="product_id"/>
+                    <field name="quantity"/>
+                    <field name="unit_price"/>
                     <field
                         name="analytic_distribution"
                         widget="analytic_distribution"
                         groups="analytic.group_analytic_accounting"
                         options="{'product_field': 'product_id'}"
                     />
-                    <field name="amount" />
-                    <field name="tax_receipt_ok" />
-                    <field name="amount_company_currency" />
-                    <field name="in_kind" />
-                    <field name="currency_id" invisible="1" />
-                    <field name="company_currency_id" invisible="1" />
-                    <field name="company_id" invisible="1" />
-                    <field name="product_detailed_type" invisible="1" />
+                    <field name="amount"/>
+                    <field name="tax_receipt_ok"/>
+                    <field name="amount_company_currency"/>
+                    <field name="in_kind"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="company_currency_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="product_type" invisible="1"/>
                 </group>
             </form>
         </field>
@@ -443,12 +392,12 @@
     <record id="donation_action" model="ir.actions.act_window">
         <field name="name">Donations</field>
         <field name="res_model">donation.donation</field>
-        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="view_mode">list,form,pivot,graph</field>
     </record>
     <record id="donation_line_action" model="ir.actions.act_window">
         <field name="name">Donations Lines</field>
         <field name="res_model">donation.line</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <menuitem
         id="donation_top_menu"
@@ -486,10 +435,11 @@
     <record id="donation_product_action" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field
             name="context"
-        >{'search_default_filter_donation': 1, 'default_detailed_type': 'donation'}</field>
+        >{'search_default_filter_donation': 1, 'default_type': 'donation'}
+        </field>
     </record>
     <menuitem
         id="donation_products"

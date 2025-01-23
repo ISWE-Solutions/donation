@@ -323,12 +323,12 @@ msgid "In-Kind Donation - no tax receipt"
 msgstr ""
 
 #. module: donation_base
-#: model:ir.model.fields.selection,name:donation_base.selection__product_template__detailed_type__donation_in_kind_consu
+#: model:ir.model.fields.selection,name:donation_base.selection__product_template__type__donation_in_kind_consu
 msgid "In-Kind Donation Consummable"
 msgstr ""
 
 #. module: donation_base
-#: model:ir.model.fields.selection,name:donation_base.selection__product_template__detailed_type__donation_in_kind_service
+#: model:ir.model.fields.selection,name:donation_base.selection__product_template__type__donation_in_kind_service
 msgid "In-Kind Donation Service"
 msgstr ""
 

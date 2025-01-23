@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2014-2021 Barroux Abbey (http://www.barroux.org)
 # Copyright 2014-2021 Akretion France (http://www.akretion.com/)
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>

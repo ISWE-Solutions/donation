@@ -1,10 +1,12 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2014-2021 Barroux Abbey (http://www.barroux.org)
 # Copyright 2014-2021 Akretion France
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
     "name": "Donation",
-    "version": "16.0.2.1.0",
+    "version": "18.0.1.0.0",
     "category": "Accounting",
     "license": "AGPL-3",
     "summary": "Manage donations",
@@ -30,7 +32,9 @@
         "report/donation_thanks_view.xml",
         "report/donation_thanks_report.xml",
     ],
-    "post_init_hook": "update_account_payment_mode",
-    "demo": ["demo/donation_demo.xml"],
+    "demo": [
+        "demo/donation_demo.xml"
+    ],
     "installable": True,
+    'post_init_hook': 'post_init_hook',
 }

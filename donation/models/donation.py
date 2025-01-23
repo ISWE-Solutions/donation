@@ -22,7 +22,6 @@ class DonationDonation(models.Model):
     currency_id = fields.Many2one(
         "res.currency",
         required=True,
-        states={"done": [("readonly", True)]},
         tracking=True,
         ondelete="restrict",
         default=lambda self: self.env.company.currency_id,
@@ -32,7 +31,6 @@ class DonationDonation(models.Model):
         string="Donor",
         required=True,
         index=True,
-        states={"done": [("readonly", True)]},
         tracking=True,
         ondelete="restrict",
     )
@@ -50,7 +48,6 @@ class DonationDonation(models.Model):
     )
     check_total = fields.Monetary(
         string="Check Amount",
-        states={"done": [("readonly", True)]},
         currency_field="currency_id",
         tracking=True,
     )
@@ -68,21 +65,18 @@ class DonationDonation(models.Model):
     )
     donation_date = fields.Date(
         required=True,
-        states={"done": [("readonly", True)]},
         index=True,
         tracking=True,
     )
     company_id = fields.Many2one(
         "res.company",
         required=True,
-        states={"done": [("readonly", True)]},
         default=lambda self: self.env.company,
     )
     line_ids = fields.One2many(
         "donation.line",
         "donation_id",
         string="Donation Lines",
-        states={"done": [("readonly", True)]},
         copy=True,
     )
     move_id = fields.Many2one(
@@ -98,21 +92,17 @@ class DonationDonation(models.Model):
         string="Donation Number",
         index=True,
         default=lambda self: _("New"),
-        readonly=True,
-        states={"draft": [("readonly", False)]},
     )
     payment_mode_id = fields.Many2one(
         "account.payment.mode",
         domain="[('company_id', '=', company_id), ('donation', '=', True)]",
         tracking=True,
         check_company=True,
-        states={"done": [("readonly", True)]},
         default=lambda self: self.env.user.context_donation_payment_mode_id,
     )
     payment_ref = fields.Char(
         string="Payment Reference",
-        states={"done": [("readonly", True)]},
-        copy=False,
+        copy=False
     )
     state = fields.Selection(
         [("draft", "Draft"), ("done", "Done"), ("cancel", "Cancelled")],
@@ -149,12 +139,10 @@ class DonationDonation(models.Model):
             ("annual", "Annual Tax Receipt"),
         ],
         compute="_compute_tax_receipt_option",
-        states={"done": [("readonly", True)]},
         index=True,
         tracking=True,
         precompute=True,
         store=True,
-        readonly=False,
     )
     tax_receipt_total = fields.Monetary(
         compute="_compute_total",
@@ -681,12 +669,12 @@ class DonationLine(models.Model):
     product_id = fields.Many2one(
         "product.product",
         required=True,
-        domain=[("detailed_type", "like", "donation")],
+        domain=[("type", "like", "donation")],
         ondelete="restrict",
         check_company=True,
     )
-    product_detailed_type = fields.Selection(
-        related="product_id.detailed_type", store=True, string="Product Type"
+    product_type = fields.Selection(
+        related="product_id.type", store=True, string="Product Type"
     )
     quantity = fields.Integer(default=1)
     unit_price = fields.Monetary(currency_field="currency_id")
@@ -725,8 +713,8 @@ class DonationLine(models.Model):
         for line in self:
             in_kind = False
             if (
-                line.product_id.detailed_type
-                and line.product_id.detailed_type.startswith("donation_in_kind")
+                line.product_id.type
+                and line.product_id.type.startswith("donation_in_kind")
             ):
                 in_kind = True
             line.in_kind = in_kind

@@ -330,12 +330,12 @@ msgid "In-Kind Donation - no tax receipt"
 msgstr "Spachspende - keine Spendenbescheinigung"
 
 #. module: donation_base
-#: model:ir.model.fields.selection,name:donation_base.selection__product_template__detailed_type__donation_in_kind_consu
-msgid "In-Kind Donation Consummable"
+#: model:ir.model.fields.selection,name:donation_base.selection__product_template__type__donation_in_kind_consu
+msgid "In-Kind Donation Consumable"
 msgstr ""
 
 #. module: donation_base
-#: model:ir.model.fields.selection,name:donation_base.selection__product_template__detailed_type__donation_in_kind_service
+#: model:ir.model.fields.selection,name:donation_base.selection__product_template__type__donation_in_kind_service
 msgid "In-Kind Donation Service"
 msgstr ""
 

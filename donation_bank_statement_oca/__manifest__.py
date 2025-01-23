@@ -3,7 +3,7 @@
 
 {
     "name": "Donation Bank Statement OCA",
-    "version": "16.0.1.0.0",
+    "version": "18.0.1.0.0",
     "category": "Accounting",
     "license": "AGPL-3",
     "summary": "Manage donations by credit transfer",

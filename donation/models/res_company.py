@@ -11,13 +11,13 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     donation_credit_transfer_product_id = fields.Many2one(
-        "product.product",
+        comodel_name="product.product",
         string="Product for Donations via Credit Transfer",
-        domain=[("detailed_type", "=", "donation")],
+        domain=[("type", "=", "donation")],
         ondelete="restrict",
     )
     donation_account_id = fields.Many2one(
-        "account.account",
+        comodel_name="account.account",
         check_company=True,
         copy=False,
         ondelete="restrict",
@@ -29,7 +29,7 @@ class ResCompany(models.Model):
     def company_donation_bank_statement_check(self):
         for company in self:
             product = company.donation_credit_transfer_product_id
-            if product and product.detailed_type != "donation":
+            if product and product.type != "donation":
                 raise ValidationError(
                     _(
                         "On the company %(company)s, the Product for Donations "

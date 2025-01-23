@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2014-2021 Barroux Abbey (http://www.barroux.org)
 # Copyright 2014-2021 Akretion France (http://www.akretion.com/)
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
@@ -10,7 +12,7 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     tax_receipt_option = fields.Selection(
-        [
+        selection=[
             ("none", "None"),
             ("each", "For Each Donation"),
             ("annual", "Annual Tax Receipt"),
@@ -18,13 +20,8 @@ class ResPartner(models.Model):
         default="each",
         tracking=True,
     )
-    tax_receipt_ids = fields.One2many(
-        "donation.tax.receipt", "partner_id", string="Tax Receipts"
-    )
-    tax_receipt_count = fields.Integer(
-        compute="_compute_tax_receipt_count",
-        string="# of Tax Receipts",
-    )
+    tax_receipt_ids = fields.One2many(comodel_name="donation.tax.receipt", inverse_name="partner_id", string="Tax Receipts")
+    tax_receipt_count = fields.Integer(compute="_compute_tax_receipt_count",string="# of Tax Receipts")
     donor_rank = fields.Integer(default=0)
 
     # I don't want to sync tax_receipt_option between parent and child

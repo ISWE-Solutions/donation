@@ -14,8 +14,7 @@ class ResConfigSettings(models.TransientModel):
     donation_account_id = fields.Many2one(
         related="company_id.donation_account_id",
         readonly=False,
-        domain="[('reconcile', '=', True), ('deprecated', '=', False), "
-        "('company_id', '=', company_id), ('account_type', '=', 'asset_current')]",
+        domain="[('reconcile', '=', True), ('deprecated', '=', False), ('account_type', '=', 'asset_current')]",
     )
     group_donation_check_total = fields.Boolean(
         string="Check Total on Donations",

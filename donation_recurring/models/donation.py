@@ -18,8 +18,7 @@ class DonationDonation(models.Model):
     )
     source_recurring_id = fields.Many2one(
         "donation.donation",
-        string="Source Recurring Template",
-        states={"done": [("readonly", True)]},
+        string="Source Recurring Template"
     )
     recurring_donation_ids = fields.One2many(
         "donation.donation",
