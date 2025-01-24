@@ -49,12 +49,7 @@
                         groups="donation.group_donation_user"
                         invisible="context.get('recurring_view')"
                     />
-                    <field
-                        name="state"
-                        widget="statusbar"
-                        invisible="context.get('recurring_view')"
-                        statusbar_visible="draft,done"
-                    />
+                    <field name="state" widget="statusbar" invisible="context.get('recurring_view')" statusbar_visible="draft,done"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
@@ -98,37 +93,27 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Donation Lines" name="lines">
+                        <page string="Donation Lines" name="donation_lines">
                             <field name="line_ids" nolabel="1"/>
                             <group name="subtotal" class="oe_subtotal_footer oe_right">
-                                <field
-                                    name="amount_total"
-                                    string="Total"
-                                    class="oe_subtotal_footer_separator"
-                                />
+                                <field name="amount_total" string="Total" class="oe_subtotal_footer_separator"/>
                             </group>
                         </page>
-                        <page string="Other Information" name="other">
+                        <page string="Other Information" name="other_information">
                             <group name="other">
                                 <group name="other-left">
                                     <field name="move_id"/>
                                     <field name="bank_statement_line_id"/>
                                     <field name="amount_total_company_currency" groups="base.group_multi_currency"/>
                                 </group>
-                                <group name="other-right">
-                                </group>
                             </group>
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
-                </div>
             </form>
         </field>
     </record>
+
     <record id="donation_from_bank_statement_line_form" model="ir.ui.view">
         <field name="name">Creation Donation from Bank Statement Line form</field>
         <field name="model">donation.donation</field>
@@ -216,7 +201,9 @@
                 <field name="currency_id" invisible="1"/>
                 <field name="company_currency_id" invisible="1"/>
                 <field name="payment_mode_id"/>
-                <field name="tax_receipt_option" optional="hide" widget="badge" decoration-success="tax_receipt_option == 'each'" decoration-info="tax_receipt_option == 'annual'"/>
+                <field name="tax_receipt_option" optional="hide" widget="badge"
+                       decoration-success="tax_receipt_option == 'each'"
+                       decoration-info="tax_receipt_option == 'annual'"/>
                 <field name="campaign_id" optional="show"/>
                 <field name="thanks_template_id" optional="hide"/>
                 <field name="thanks_printed" optional="hide"/>
@@ -243,69 +230,21 @@
                 <separator/>
                 <filter string="Date" name="donation_date" date="donation_date"/>
                 <separator/>
-                <filter
-                    name="draft"
-                    string="Draft"
-                    domain="[('state', '=', 'draft')]"
-                />
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
                 <filter name="done" string="Done" domain="[('state', '=', 'done')]"/>
-                <filter
-                    name="cancel"
-                    string="Cancelled"
-                    domain="[('state', '=', 'cancel')]"
-                />
+                <filter name="cancel" string="Cancelled" domain="[('state', '=', 'cancel')]"/>
                 <separator/>
-                <filter
-                    name="thanks_to_print"
-                    string="Thanks to Print"
-                    domain="[('thanks_printed', '=', False)]"
-                />
+                <filter name="thanks_to_print" string="Thanks to Print" domain="[('thanks_printed', '=', False)]"/>
                 <group string="Group By" name="groupby">
-                    <filter
-                        name="date_groupby"
-                        string="Date"
-                        context="{'group_by': 'donation_date'}"
-                    />
-                    <filter
-                        name="partner_groupby"
-                        string="Donor"
-                        context="{'group_by': 'partner_id'}"
-                    />
-                    <filter
-                        name="commercial_partner_groupby"
-                        string="Parent Donor"
-                        context="{'group_by': 'commercial_partner_id'}"
-                    />
-                    <filter
-                        name="partner_country_groupby"
-                        string="Partner Country"
-                        context="{'group_by': 'country_id'}"
-                    />
-                    <filter
-                        name="state_groupby"
-                        string="State"
-                        context="{'group_by': 'state'}"
-                    />
-                    <filter
-                        name="campaign_groupby"
-                        string="Campaign"
-                        context="{'group_by': 'campaign_id'}"
-                    />
-                    <filter
-                        name="currency_groupby"
-                        string="Currency"
-                        context="{'group_by': 'currency_id'}"
-                    />
-                    <filter
-                        name="payment_mode_groupby"
-                        string="Payment Mode"
-                        context="{'group_by': 'payment_mode_id'}"
-                    />
-                    <filter
-                        name="tax_receipt_option_groupby"
-                        string="Tax Receipt Option"
-                        context="{'group_by': 'tax_receipt_option'}"
-                    />
+                    <filter name="date_groupby" string="Date" context="{'group_by': 'donation_date'}"/>
+                    <filter name="partner_groupby" string="Donor" context="{'group_by': 'partner_id'}"/>
+                    <filter name="commercial_partner_groupby" string="Parent Donor" context="{'group_by': 'commercial_partner_id'}"/>
+                    <filter name="partner_country_groupby" string="Partner Country" context="{'group_by': 'country_id'}"/>
+                    <filter name="state_groupby" string="State" context="{'group_by': 'state'}"/>
+                    <filter name="campaign_groupby" string="Campaign" context="{'group_by': 'campaign_id'}"/>
+                    <filter name="currency_groupby" string="Currency" context="{'group_by': 'currency_id'}"/>
+                    <filter name="payment_mode_groupby" string="Payment Mode" context="{'group_by': 'payment_mode_id'}"/>
+                    <filter name="tax_receipt_option_groupby" string="Tax Receipt Option" context="{'group_by': 'tax_receipt_option'}"/>
                 </group>
             </search>
         </field>
@@ -336,20 +275,12 @@
         <field name="arch" type="xml">
             <list editable="bottom">
                 <field name="sequence" widget="handle"/>
-                <field
-                    name="donation_id"
-                    invisible="not context.get('donation_line_main_view')"
-                />
+                <field name="donation_id" invisible="not context.get('donation_line_main_view')"/>
                 <field name="product_id" context="{'default_donation': True}"/>
                 <field name="product_type" optional="hide"/>
                 <field name="quantity"/>
                 <field name="unit_price"/>
-                <field
-                    name="analytic_distribution"
-                    widget="analytic_distribution"
-                    groups="analytic.group_analytic_accounting"
-                    options="{'product_field': 'product_id', 'business_domain': 'donation'}"
-                />
+                <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting" options="{'product_field': 'product_id', 'business_domain': 'donation'}"/>
                 <field name="amount"/>
                 <field name="tax_receipt_ok" string="Tax Receipt" optional="show"/>
                 <field name="in_kind" optional="hide"/>
@@ -364,19 +295,11 @@
         <field name="arch" type="xml">
             <form>
                 <group name="main">
-                    <field
-                        name="donation_id"
-                        invisible="not context.get('donation_line_main_view')"
-                    />
+                    <field name="donation_id" invisible="not context.get('donation_line_main_view')"/>
                     <field name="product_id"/>
                     <field name="quantity"/>
                     <field name="unit_price"/>
-                    <field
-                        name="analytic_distribution"
-                        widget="analytic_distribution"
-                        groups="analytic.group_analytic_accounting"
-                        options="{'product_field': 'product_id'}"
-                    />
+                    <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting" options="{'product_field': 'product_id'}"/>
                     <field name="amount"/>
                     <field name="tax_receipt_ok"/>
                     <field name="amount_company_currency"/>
